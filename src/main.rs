@@ -8,21 +8,16 @@ use square::Square;
 
 mod square;
 
-const UNIT_LENGTH: f32 = 80.0; // Real pixels of every square
-
-struct Font {
-    json: HashMap<String, Vec<u8>>,
-}
-
-impl Font {}
+const UNIT_LENGTH: f32 = 50.0; // Real pixels of every square
 
 #[macroquad::main("BasicShapes")]
 async fn main() {
-    let text = String::from("Л");
+    let text = String::from("LALEX");
+    let scale_factor = 6.0 * text.chars().count() as f32; // Factor used for scaling every set into the current iteration font size
 
     let file = fs::read_to_string("monogram-bitmap.json").expect("[!]: Font not found");
     let font: HashMap<String, Vec<u8>> =
-        serde_json::from_str(file.as_str()).expect("[!]: Error on json desirialization");
+    serde_json::from_str(file.as_str()).expect("[!]: Error on json desirialization");
 
     loop {
         clear_background(BLACK);
@@ -35,7 +30,7 @@ async fn main() {
             GREEN,
         )];
 
-        for i in 0..3 {
+        for i in 0..2 {
             
             let mut tmp_set: Vec<Square> = vec![];
             
@@ -51,11 +46,12 @@ async fn main() {
                             if (bit >> column_index & 1) != 0 {
                                 let mut tmp = set.clone();
 
-                                tmp.scale(1.0 / (6.0 * text.chars().count() as f32));
+
+                                tmp.scale(1.0 / scale_factor);
 
                                 tmp.translate(Vec2::new(
-                                    UNIT_LENGTH / (6.0 * text.chars().count() as f32).powi(i) * (column_index + char_index * 7) as f32,
-                                    UNIT_LENGTH / (6.0 * text.chars().count() as f32).powi(i) * (12 - row_index) as f32,
+                                    UNIT_LENGTH / scale_factor.powi(i) * (column_index + char_index * 7) as f32,
+                                    UNIT_LENGTH / scale_factor.powi(i) * (12 - row_index) as f32,
                                 ));
 
                                 tmp_set.push(tmp);
