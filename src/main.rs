@@ -8,7 +8,7 @@ use square::Square;
 
 mod square;
 
-const UNIT_LENGTH: f32 = 40.0; // Real pixels of every square
+const UNIT_LENGTH: f32 = 80.0; // Real pixels of every square
 
 struct Font {
     json: HashMap<String, Vec<u8>>,
@@ -18,7 +18,7 @@ impl Font {}
 
 #[macroquad::main("BasicShapes")]
 async fn main() {
-    let text = String::from("BI-Gas");
+    let text = String::from("Л");
 
     let file = fs::read_to_string("monogram-bitmap.json").expect("[!]: Font not found");
     let font: HashMap<String, Vec<u8>> =
@@ -35,12 +35,11 @@ async fn main() {
             GREEN,
         )];
 
-        for _i in 0..1 {
+        for i in 0..3 {
             
             let mut tmp_set: Vec<Square> = vec![];
             
             for set in &mut union_set {
-                set.scale(1.0 / (6.0 * text.chars().count() as f32));
 
                 for (char_index, character) in text.chars().enumerate() {
                     let bitmap: &Vec<u8> = font
@@ -52,9 +51,11 @@ async fn main() {
                             if (bit >> column_index & 1) != 0 {
                                 let mut tmp = set.clone();
 
+                                tmp.scale(1.0 / (6.0 * text.chars().count() as f32));
+
                                 tmp.translate(Vec2::new(
-                                    UNIT_LENGTH * (column_index + char_index * 7) as f32,
-                                    UNIT_LENGTH * (12 - row_index) as f32,
+                                    UNIT_LENGTH / (6.0 * text.chars().count() as f32).powi(i) * (column_index + char_index * 7) as f32,
+                                    UNIT_LENGTH / (6.0 * text.chars().count() as f32).powi(i) * (12 - row_index) as f32,
                                 ));
 
                                 tmp_set.push(tmp);
@@ -63,6 +64,8 @@ async fn main() {
                     }
                 }
             }
+
+
         union_set = tmp_set;
         }
 
