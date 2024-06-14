@@ -35,7 +35,7 @@ async fn main() {
             GREEN,
         )];
 
-        for _i in 0..2 {
+        for _i in 0..1 {
             
             let mut tmp_set: Vec<Square> = vec![];
             
