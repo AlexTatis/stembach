@@ -10,14 +10,14 @@ mod square;
 
 const UNIT_LENGTH: f32 = 50.0; // Real pixels of every square
 
-#[macroquad::main("BasicShapes")]
+#[macroquad::main("IFS Attractor")]
 async fn main() {
-    let text = String::from("LALEX");
+    let text = String::from("A");
     let scale_factor = 6.0 * text.chars().count() as f32; // Factor used for scaling every set into the current iteration font size
 
     let file = fs::read_to_string("monogram-bitmap.json").expect("[!]: Font not found");
     let font: HashMap<String, Vec<u8>> =
-    serde_json::from_str(file.as_str()).expect("[!]: Error on json desirialization");
+        serde_json::from_str(file.as_str()).expect("[!]: Error on json desirialization");
 
     loop {
         clear_background(BLACK);
@@ -30,12 +30,10 @@ async fn main() {
             GREEN,
         )];
 
-        for i in 0..2 {
-            
+        for i in 0..4 {
             let mut tmp_set: Vec<Square> = vec![];
-            
-            for set in &mut union_set {
 
+            for set in &mut union_set {
                 for (char_index, character) in text.chars().enumerate() {
                     let bitmap: &Vec<u8> = font
                         .get(&character.to_string())
@@ -45,7 +43,6 @@ async fn main() {
                         for column_index in 0..5 {
                             if (bit >> column_index & 1) != 0 {
                                 let mut tmp = set.clone();
-
 
                                 tmp.scale(1.0 / scale_factor);
 
@@ -61,10 +58,10 @@ async fn main() {
                 }
             }
 
+            println!("{}", tmp_set.len());
 
-        union_set = tmp_set;
+            union_set = tmp_set;
         }
-
 
         union_set.into_iter().for_each(|x| x.draw());
 
