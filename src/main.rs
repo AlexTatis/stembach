@@ -1,16 +1,17 @@
 use std::{
     collections::HashMap,
-    fs::{self},
+    fs, sync::{Arc, Mutex},
 };
 
 use macroquad::prelude::*;
+use rayon::prelude::*;
 use square::Square;
 
 mod square;
 
 const UNIT_LENGTH: f32 = 50.0; // Real pixels of every square
 
-#[macroquad::main("IFS Attractor")]
+#[macroquad::main("BasicShapes")]
 async fn main() {
     let text = String::from("A");
     let scale_factor = 6.0 * text.chars().count() as f32; // Factor used for scaling every set into the current iteration font size
@@ -30,37 +31,34 @@ async fn main() {
             GREEN,
         )];
 
-        for i in 0..4 {
-            let mut tmp_set: Vec<Square> = vec![];
+        for i in 0..5 {
+            let tmp_set: Arc<Mutex<Vec<Square>>> = Arc::new(Mutex::new(vec![]));
 
-            for set in &mut union_set {
-                for (char_index, character) in text.chars().enumerate() {
-                    let bitmap: &Vec<u8> = font
-                        .get(&character.to_string())
-                        .expect("[!]: Character not recognized. Check the string given");
+            union_set.par_iter_mut().for_each(|set|for (char_index, character) in text.chars().enumerate() {
+                let bitmap: &Vec<u8> = font
+                    .get(&character.to_string())
+                    .expect("[!]: Character not recognized. Check the string given");
 
-                    for (row_index, bit) in bitmap.into_iter().enumerate().rev() {
-                        for column_index in 0..5 {
-                            if (bit >> column_index & 1) != 0 {
-                                let mut tmp = set.clone();
+                for (row_index, bit) in bitmap.into_iter().enumerate().rev() {
+                    for column_index in 0..5 {
+                        if (bit >> column_index & 1) != 0 {
+                            let mut tmp = set.clone();
 
-                                tmp.scale(1.0 / scale_factor);
+                            tmp.scale(1.0 / scale_factor);
 
-                                tmp.translate(Vec2::new(
-                                    UNIT_LENGTH / scale_factor.powi(i) * (column_index + char_index * 7) as f32,
-                                    UNIT_LENGTH / scale_factor.powi(i) * (12 - row_index) as f32,
-                                ));
+                            tmp.translate(Vec2::new(
+                                UNIT_LENGTH / scale_factor.powi(i)
+                                    * (column_index + char_index * 7) as f32,
+                                UNIT_LENGTH / scale_factor.powi(i) * (12 - row_index) as f32,
+                            ));
 
-                                tmp_set.push(tmp);
-                            }
+                            tmp_set.lock().unwrap().push(tmp);
                         }
                     }
                 }
-            }
+            });
 
-            println!("{}", tmp_set.len());
-
-            union_set = tmp_set;
+            union_set = Arc::try_unwrap(tmp_set).unwrap().into_inner().unwrap();
         }
 
         union_set.into_iter().for_each(|x| x.draw());
