@@ -85,6 +85,8 @@ class LindenmayerApp(App[str]):
 
             my_turtle = turtle.Turtle()
 
+            my_turtle.hideturtle()
+
             sequence = generate_fractal_sequence(
                 sequence=self.query_one("#axiom").value,
                 iterations=int(self.query_one("#iterations").value),
