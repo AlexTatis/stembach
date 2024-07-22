@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-S=np.linspace(0.7,4,160000)
+S=np.linspace(0.7,4,240000)
 
 X = []
 C = []
