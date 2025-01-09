@@ -129,8 +129,8 @@ class FractalPres(MovingCameraSlide):
         b1 = Brace(kc)
         b1text = b1.get_tex(r"1 u")
 
-        b2 = Brace(kc2[1])
-        b2text = b2.get_tex(r"1/3 u")
+        """  b2 = Brace(kc2[1])
+        b2text = b2.get_tex(r"1/3 u") """
 
 
         self.play(FadeOut(Group(text)), Transform(title, title3))
@@ -138,8 +138,9 @@ class FractalPres(MovingCameraSlide):
         self.play(Write(kc), Write(b1), Write(b1text))
 
         self.next_slide()
+        self.play(FadeOut(Group(text1, b1, b1text)))
         self.play(Transform(kc, kc2))
-        self.play(Transform(b1, b2), Transform(b1text, b2text))
+        """ self.play(Transform(b1, b2), Transform(b1text, b2text)) """
 
         self.next_slide()
         self.play(Transform(kc, kc3))
@@ -159,8 +160,51 @@ class FractalPres(MovingCameraSlide):
 
         self.next_slide()
 
-        self.play(FadeOut(Group(text1)), kc.scale(0.2).to_corner(DOWN + RIGHT))
+        subtitle = Tex(r"\textbf{Instrucciones}", font_size=36)
+        text1 = Tex(r"F $\rightarrow$ Mover 1 paso", font_size=36).next_to(subtitle, DOWN, aligned_edge=LEFT)
+        text2 = Tex(r"+ $\rightarrow$ Girar $\frac{\pi}{3}$", font_size=36).next_to(text1, DOWN, aligned_edge=LEFT)
+        text3 = Tex(r"- $\rightarrow$ Girar $-\frac{\pi}{3}$", font_size=36).next_to(text2, DOWN, aligned_edge=LEFT)
 
+        instructions = VGroup(subtitle, text1, text2, text3)
+        inst_box = SurroundingRectangle(instructions, color=BLUE, buff=MED_LARGE_BUFF, corner_radius=0.2)
+        instructions.add(inst_box)
+        instructions.next_to(title, DOWN*2, aligned_edge=LEFT)
+
+        subtitle2 = Tex(r"\textbf{Normas de sustitución}", font_size=36)
+        text4 = Tex(r"F $\rightarrow$ F+F--F+F", font_size=36).next_to(subtitle2, DOWN, aligned_edge=LEFT)
+
+        rules = VGroup(subtitle2, text4)
+        rules_box = SurroundingRectangle(rules, color=RED, buff=MED_LARGE_BUFF, corner_radius=0.2)
+        rules.add(rules_box)
+        rules.next_to(instructions, DOWN*2, aligned_edge=LEFT)
+
+
+        kc9  = KochCurve(0, stroke_width=1, length=10).scale(0.8).to_corner(DOWN + RIGHT)
+        kc10  = KochCurve(1, stroke_width=1, length=10).scale(0.8).to_corner(DOWN + RIGHT)
+        kc11  = KochCurve(2, stroke_width=1, length=10).scale(0.8).to_corner(DOWN + RIGHT)
+        iteration = Tex(r"$C_0 = \{F\}$", font_size=36).next_to(kc9, UP * 20)
+        iteration1 = Tex(r"$C_1 = \{F+F--F+F\}$", font_size=36).next_to(kc9, UP * 20)
+        iteration2 = Tex(r"$C_2 = \{F+F--F+F+F+F--F+F--F+F--F+F+...\}$", font_size=36).next_to(kc9, UP * 20)
+
+        dot = Dot().next_to(kc9, LEFT, buff=0)
+
+        self.play(kc.animate.scale(0.8).to_corner(DOWN + RIGHT))
+        self.play(Transform(kc, kc9))
+        self.play(FadeIn(instructions), FadeIn(rules))
+        self.play(Write(iteration), Create(dot))
+
+        self.next_slide()
+        self.play(MoveAlongPath(dot, kc9))
+
+        self.next_slide()
+        self.play(dot.animate.next_to(kc9, LEFT, buff=0))
+        self.play(Transform(kc, kc10), Transform(iteration, iteration1))
+        self.play(MoveAlongPath(dot, kc10))
+
+        self.next_slide()
+        self.play(dot.animate.next_to(kc9, LEFT, buff=0))
+        self.play(Transform(kc, kc11), Transform(iteration1, iteration2))
+        self.play(MoveAlongPath(dot, kc11))
         
         
 
