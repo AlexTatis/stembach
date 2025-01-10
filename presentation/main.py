@@ -112,10 +112,10 @@ class FractalPres(MovingCameraSlide):
 
         self.next_slide()
 
-        title3 = Tex(r"3. Sistemas de Lindenmayer").to_edge(UP + LEFT)
+        title3 = Tex(r"3. Sistemas Lindenmayer").to_edge(UP + LEFT)
 
         # text1 = Tex(r"Inspirado en la división celular.", font_size=28).next_to(title, DOWN*2, aligned_edge=LEFT)
-        text1 = Tex(r"Comenzamos con un segmento...", font_size=36).shift(UP)
+        text1 = Tex(r"Los fractales se pueden entender como la repetición recursiva de una estructura", font_size=36).shift(UP)
 
         kc  = KochCurve(0, stroke_width=1, length=10).to_edge(DOWN, buff=2.5).next_to(text1, DOWN * 10)
         kc2 = KochCurve(1, stroke_width=1, length=10).to_edge(DOWN, buff=2.5).next_to(text1, DOWN * 10).shift(5 * (1 - np.sqrt(1/3)) * UP)
@@ -131,7 +131,6 @@ class FractalPres(MovingCameraSlide):
 
         """  b2 = Brace(kc2[1])
         b2text = b2.get_tex(r"1/3 u") """
-
 
         self.play(FadeOut(Group(text)), Transform(title, title3))
         self.play(Write(text1))
@@ -184,7 +183,7 @@ class FractalPres(MovingCameraSlide):
         kc11  = KochCurve(2, stroke_width=1, length=10).scale(0.8).to_corner(DOWN + RIGHT)
         iteration = Tex(r"$C_0 = \{F\}$", font_size=36).next_to(kc9, UP * 20)
         iteration1 = Tex(r"$C_1 = \{F+F--F+F\}$", font_size=36).next_to(kc9, UP * 20)
-        iteration2 = Tex(r"$C_2 = \{F+F--F+F+F+F--F+F--F+F--F+F+...\}$", font_size=36).next_to(kc9, UP * 20)
+        iteration2 = Tex(r"$C_2 = \{F+F--F+F+F+F--F+F...\}$", font_size=36).next_to(kc9, UP * 20)
 
         dot = Dot().next_to(kc9, LEFT, buff=0)
 
@@ -194,18 +193,68 @@ class FractalPres(MovingCameraSlide):
         self.play(Write(iteration), Create(dot))
 
         self.next_slide()
-        self.play(MoveAlongPath(dot, kc9))
+        self.play(MoveAlongPath(dot, kc9, run_time=2))
 
         self.next_slide()
+
         self.play(dot.animate.next_to(kc9, LEFT, buff=0))
+
+        self.next_slide()
+        
+        tracker = ValueTracker(0)
+        dot.add_updater(
+             lambda m: m.move_to(kc10.point_from_proportion(tracker.get_value()))
+        )
+
+        STOPS = [.25, .5, .75, 1.0]
+
         self.play(Transform(kc, kc10), Transform(iteration, iteration1))
-        self.play(MoveAlongPath(dot, kc10))
+        
+        for stop in STOPS:
+            # move to next position
+            self.play(
+                tracker.animate.set_value(stop),
+                run_time=1.0
+                )
+            # pause, do something, pause
+            self.next_slide()
+
+        dot.clear_updaters()
+
+        self.play(dot.animate.next_to(kc9, LEFT, buff=0))
+        self.play(Transform(kc, kc11), Transform(iteration, iteration2))
+        self.play(MoveAlongPath(dot, kc11, run_time=2))
 
         self.next_slide()
-        self.play(dot.animate.next_to(kc9, LEFT, buff=0))
-        self.play(Transform(kc, kc11), Transform(iteration1, iteration2))
-        self.play(MoveAlongPath(dot, kc11))
-        
-        
+
+        ##
+        ## Slide 5: CONSECUENCIAS SISTEMAS-L
+        ##
+
+        title3 = Tex(r"3. Sistemas Lindenmayer: Consecuencias").to_edge(UP + LEFT)
+
+        island   = KochCurve(7, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5)
+        island1  = KochCurve(7, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(240*DEGREES, about_point=island.get_start()).shift(RIGHT * 5)
+        island2  = KochCurve(7, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(-240*DEGREES, about_point=island.get_end()).shift(LEFT * 5)
+
+        text = Tex(r"\[A = \lim_{n\rightarrow\infty} \frac{\sqrt{3}}{20} \left(8-3\left(\frac{4}{9}\right)^n\right) = \frac{8\sqrt{3}}{20} = \boxed{\frac{2\sqrt{3}}{5}}\]", font_size=28).next_to(title, DOWN*2, aligned_edge=LEFT)
+        text1 = Tex(r"\[P = \lim_{n\rightarrow\infty} 3 \cdot\left( \frac{4}{3} \right)^n = \boxed{\infty}\]", font_size=28).next_to(text, DOWN, aligned_edge=LEFT)
+        text2 = Tex(r"\textbf{¡Área finita contenida por una curva \\ de longitud infinita!}", font_size=28).next_to(text1, 5*DOWN, aligned_edge=LEFT)
+
+        self.play(FadeOut(Group(kc, instructions, rules, iteration, dot)), Transform(title, title3))
+        self.play(Write(island), Write(island1), Write(island2))
+
+        self.next_slide()
+
+        self.play(Write(text))
+
+        self.next_slide()
+
+        self.play(Write(text1))
+        self.play(Write(text2))
+
+        ##
+        ## Slide 5: CONSECUENCIAS SISTEMAS-L
+        ##
 
         
