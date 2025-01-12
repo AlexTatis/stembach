@@ -1,8 +1,9 @@
 from manim import *
-from manim_slides import Slide
+from manim_slides import ThreeDSlide
 import numpy as np
+from scipy.integrate import solve_ivp
 
-class MovingCameraSlide(Slide, MovingCameraScene):
+class MovingCameraSlide(ThreeDSlide, MovingCameraScene):
     pass
 
 def KochCurve(
@@ -29,7 +30,7 @@ def KochCurve(
             return KC
         
 
-class FractalPres(MovingCameraSlide):
+class FractalPres(ThreeDSlide):
     def construct(self):
         text = VGroup(
             Tex(r"{\large$\mathbb{E}$}xplorando la geometría fractal:", font_size=40),
@@ -51,7 +52,7 @@ class FractalPres(MovingCameraSlide):
         self.next_slide()
         self.play(FadeOut(Group(*self.mobjects)))
 
-        self.camera.frame.save_state()
+        # self.camera.frame.save_state()
 
         title = Tex(r"1. ¿Qué es un fractal?").to_edge(UP + LEFT)
         text1 = Tex(r"En la \textbf{naturaleza} observamos estructuras que podríamos denominar \textit{fractales}.", font_size=28, ).next_to(title, DOWN*2, aligned_edge=LEFT)
@@ -74,8 +75,8 @@ class FractalPres(MovingCameraSlide):
 
         self.play(FadeIn(image))
 
-        self.next_slide()
-        self.play(self.camera.frame.animate.scale(0.5).move_to(image[0]))
+        # self.next_slide()
+        # self.play(self.camera.frame.animate.scale(0.5).move_to(image[0]))
 
         ###
         ### SLIDE 2
@@ -102,7 +103,7 @@ class FractalPres(MovingCameraSlide):
         \end{enumerate}
         """, font_size=28, tex_environment="flushleft").next_to(title, DOWN*2, aligned_edge=LEFT)
 
-        self.play(Restore(self.camera.frame))
+        # self.play(Restore(self.camera.frame))
         self.play(FadeOut(Group(text1, text2, image)), Transform(title, title2))
         self.play(Write(text))
 
@@ -344,8 +345,6 @@ class FractalPres(MovingCameraSlide):
 
         for _ in range(10):
             self.play(ApplyFunction(mobject=square_set, function=barnsley_ifs))
-        
-
 
         ##
         ## Slide 7: Consecuencias IFS
@@ -361,4 +360,187 @@ class FractalPres(MovingCameraSlide):
         self.play(FadeOut(initial_sets), FadeOut(square_set), FadeOut(contractions))
         self.play(Transform(title, title5))
         self.play(FadeIn(body))
+        
+
+        ##
+        ## Slide 8: Sistemas dinámicos
+        ##
+
+        self.next_slide()
+
+        title6 = Tex(r"5. Sistemas dinámicos").to_edge(UP + LEFT)
+        subtitle = Tex(r"\textbf{Normas recursivas}", font_size=36).to_edge(UP).shift(DOWN * 1.5)
+        text = VGroup(
+             Tex(r"Expresiones del tipo", font_size=36),
+             Tex(r"\[X_n = F(X_{n-1}, t)\]", font_size=36),
+             Tex(r"son muy comunes en la ciencia", font_size=36),
+        ).arrange(DOWN)
+        
+
+        self.play(FadeOut(body), Transform(title, title6))
+        self.play(Write(subtitle))
+        self.play(Write(text))
+
+        self.next_slide()
+
+        self.play(FadeOut(text))
+
+        subtitle2 = Tex(r"\textbf{Normas recursivas: Economía}", font_size=36).next_to(title, DOWN*2, aligned_edge=LEFT)
+        text = VGroup(
+             Tex(r"Interés compuesto discreto", font_size=36),
+             Tex(r"\[A_n = A_{n-1}(1+r)\]", font_size=36),
+        ).arrange(DOWN).next_to(subtitle2, DOWN*2)
+
+        chart = BarChart(
+            values=[100, 200, 400, 800, 1600],
+            bar_names=["Mes 1", "Mes 2", "Mes 3", "Mes 4", "Mes 5"],
+            y_range=[0, 1800, 200],
+            y_length=5,
+            x_length=5,
+            x_axis_config={"font_size": 20},
+        ).to_corner(RIGHT)
+
+        self.play(Transform(subtitle, subtitle2))
+        self.play(Write(text))
+        self.play(DrawBorderThenFill(chart, run_time=2))
+
+        self.next_slide()
+
+        self.play(FadeOut(text), FadeOut(chart))
+
+        subtitle3 = Tex(r"\textbf{Normas recursivas: Meteorología}", font_size=36).next_to(title, DOWN*2, aligned_edge=LEFT)
+        
+        text = VGroup(
+             Tex(r"Corrientes de convección", font_size=36),
+             Tex(r"""\[
+                    \begin{aligned}
+                        \frac{\partial x}{\partial t} &= \sigma (y - x), \\
+                        \frac{\partial y}{\partial t} &= x (\rho - z) - y, \\
+                        \frac{\partial z}{\partial t} &= x y - \beta z.
+                    \end{aligned}
+                \]""", font_size=36),
+        ).arrange(DOWN).next_to(subtitle2, DOWN*2)
+
+        self.play(Transform(subtitle, subtitle3))
+        self.play(Write(text))
+        self.add_fixed_in_frame_mobjects(title, subtitle, text)
+        self.set_camera_orientation(phi=2*PI/5, theta=PI/5)
+
+        def lorenz_equations(t, state):
+            x, y, z = state
+            sigma, rho, beta = 10, 28, 2.667
+            dx = sigma * (y - x)
+            dy = x * (rho - z) - y
+            dz = x * y - beta * z
+            return [dx, dy, dz]   
+        
+        axes = ThreeDAxes(x_length=6, y_length=6, z_length=6, tips=False).to_corner(LEFT).shift(UP + 0.5 * RIGHT)
+
+        initial_conditions = [[0, 1, 1.05], [0, 1, 1.06]]
+        scale_factor = 9
+        curves = VGroup(axes)
+
+
+        for condition in initial_conditions:
+            solution = solve_ivp(lorenz_equations, [0, 30], condition, t_eval=np.linspace(0, 30, 3000))
+            points = [axes.c2p(x / scale_factor, y / scale_factor, z / scale_factor) for x, y, z in zip(solution.y[0], solution.y[1], solution.y[2])]
+            curve = VMobject(stroke_width=2, stroke_color=BLUE).set_points_as_corners(points)
+            curves.add(curve)
+
+        for mob in curves:
+            always_rotate(mob, PI / 5, axis=np.array([0., 0., 1.]))
+        
+        self.play(Create(curves[0]))
+    
+        self.play(Create(curves[1:], run_time=15, rate_func=linear))
+
+        self.wait(20)
+        self.next_slide()
+
+        ##
+        ## Slide 7: Consecuencias sistemas dinámicos
+        ##
+
+        self.play(FadeOut(text, curves))
+        self.set_camera_orientation(phi=0, theta=-1.5707963267948966)
+        
+        title7 = Tex(r"5. Sistemas dinámicos: Consecuencias").to_edge(UP + LEFT)
+        subtitle4 = Tex(r"\textbf{El mapa logístico: población bateriana}", font_size=36).next_to(title, DOWN*2, aligned_edge=LEFT)
+        self.play(Transform(title, title7), Transform(subtitle, subtitle4))
+
+
+        text = Tex(r"\[X_{n+1} = CX_{n}(1 - X_{n})\]", font_size=36).next_to(subtitle4, DOWN*2, aligned_edge=LEFT)
+
+        axes = Axes(
+            x_range=[0, 1, 0.2],
+            y_range=[0, 1, 0.1],
+            x_length=5,
+            y_length=5,
+            x_axis_config={"font_size": 20},
+            y_axis_config={"font_size": 20},
+            tips=False,
+        ).to_corner(RIGHT)
+
+        self.play(Write(text), Create(axes))
+
+        self.next_slide()
+
+        C = 1.0
+        on_screen_var = Variable(C, "C", num_decimal_places=1).next_to(text, DOWN*2, aligned_edge=LEFT)
+        c_tracker = on_screen_var.tracker
+
+        def logistic_map(x: float) -> float:
+            return c_tracker.get_value() * x - c_tracker.get_value() * np.square(x)
+
+        graph = always_redraw(lambda: axes.plot(lambda x: logistic_map(x), color=RED))
+
+        self.play(Write(on_screen_var), Create(graph))
+
+        self.next_slide()
+
+        self.play(c_tracker.animate.set_value(2))
+        self.play(c_tracker.animate.set_value(4))
+        self.play(c_tracker.animate.set_value(3))
+
+        self.next_slide()
+
+        graph2 = always_redraw(lambda: axes.plot(lambda x: logistic_map(logistic_map(x)), color=RED))
+
+        self.play(Transform(graph, graph2))
+
+        self.next_slide()
+
+        graph3 = always_redraw(lambda: axes.plot(lambda x: logistic_map(logistic_map(logistic_map(x))), color=RED))
+
+        self.play(Transform(graph, graph3))
+
+        self.next_slide()
+
+        text2 = Tex(r"¿Existe algún ciclo estable?", font_size=36).next_to(on_screen_var, DOWN*2, aligned_edge=LEFT)
+
+        self.play(Write(text2))
+
+        self.next_slide()
+
+        self.play(FadeOut(text), FadeOut(text2), FadeOut(subtitle), FadeOut(on_screen_var), FadeOut(axes), FadeOut(graph))
+
+        body = Group(
+            Tex(r"\textbf{¡De un caso natural, emerge una estructura fractal!}", font_size=36),
+            ImageMobject("./bifurcation.png")
+        ).arrange(DOWN)
+
+        self.play(FadeIn(body))
+
+        self.next_slide()
+
+        self.play(FadeOut(body), FadeOut(title))
+
+        body = Group(Tex(r"¡Gracias por su atención!"),
+                     ImageMobject("qr-code.png")).arrange(DOWN)
+        
+        self.play(FadeIn(body))
+
+
+
+
 
