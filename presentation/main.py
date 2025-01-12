@@ -344,3 +344,21 @@ class FractalPres(MovingCameraSlide):
 
         for _ in range(10):
             self.play(ApplyFunction(mobject=square_set, function=barnsley_ifs))
+        
+
+
+        ##
+        ## Slide 7: Consecuencias IFS
+        ##
+
+        self.next_slide()
+        title5 = Tex(r"4. Sistemas de funciones iteradas: Consecuencias").to_edge(UP + LEFT)
+        body = Group(
+            Tex(r"\textbf{¡Cualquier forma es posible!}", font_size=36),
+            ImageMobject("stem-ifs.png").scale(1.3)
+        ).arrange(DOWN, buff=MED_LARGE_BUFF)
+
+        self.play(FadeOut(initial_sets), FadeOut(square_set), FadeOut(contractions))
+        self.play(Transform(title, title5))
+        self.play(FadeIn(body))
+
