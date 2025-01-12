@@ -212,10 +212,7 @@ class FractalPres(MovingCameraSlide):
         
         for stop in STOPS:
             # move to next position
-            self.play(
-                tracker.animate.set_value(stop),
-                run_time=1.0
-                )
+            self.play(tracker.animate.set_value(stop),run_time=1.0)
             # pause, do something, pause
             self.next_slide()
 
@@ -254,7 +251,96 @@ class FractalPres(MovingCameraSlide):
         self.play(Write(text2))
 
         ##
-        ## Slide 5: CONSECUENCIAS SISTEMAS-L
+        ## Slide 6: IFS
         ##
 
+        self.next_slide()
+
+        title4 = Tex(r"4. Sistemas de funciones iteradas").to_edge(UP + LEFT)
+        self.play(FadeOut(Group(island, island1, island2, text, text1, text2)), Transform(title, title4))
+
+        square_length = 4
+        border = VGroup(Square(stroke_color=WHITE, stroke_width = 1, side_length=square_length))
+        square_set = VGroup(Square(fill_color=WHITE, fill_opacity=1.0, stroke_color=WHITE, stroke_opacity=0.0, stroke_width=1, side_length=square_length),
+                            Square(fill_color=WHITE, fill_opacity=1.0, stroke_color=WHITE, stroke_opacity=0.0, stroke_width=1, side_length=square_length)
+                            )
         
+        text = VGroup(Tex(r"\textbf{Contracciones}", font_size=36),
+                      Tex(r"\[ S_1 = \begin{pmatrix} \frac{1}{2} & 0 & 1 \\ 0 & \frac{1}{2} & -1 \\ 0 & 0 & 1 \end{pmatrix} \]", font_size=30),
+                      Tex(r"\[ S_2 =\frac{3}{8} \cdot\begin{pmatrix} \sqrt{2} & -\sqrt{2} & -1 \\ \sqrt{2} & \sqrt{2} & 1 \\ 0 & 0 & 1 \end{pmatrix} \]", font_size=30)
+                      ).arrange(DOWN, buff=MED_LARGE_BUFF).next_to(title, DOWN * 2, aligned_edge=LEFT)
+        
+        initial_sets = VGroup(Tex(r"\textbf{C. iniciales}", font_size=36), Square(side_length=1), Triangle(radius=0.6, color=WHITE)
+                              ).arrange(DOWN, buff=MED_LARGE_BUFF).next_to(title, DOWN * 2, aligned_edge=LEFT).to_corner(RIGHT, buff=LARGE_BUFF * 1.5)
+
+        contractions = VGroup(text)
+        contractions.next_to(title, DOWN*2, aligned_edge=LEFT)
+
+        matrix = [[0.5, 0], 
+                  [0, 0.5]]
+        matrix2 = [[0.75 * np.sqrt(2)/2, -0.75 * np.sqrt(2)/2],
+                   [0.75 * np.sqrt(2)/2, 0.75 * np.sqrt(2)/2]]
+
+        def barnsley_ifs(set: VGroup) -> VGroup:
+            
+            result = VGroup()
+
+            for object in set:
+                 
+                copy = object.copy()
+                copy1 = object.copy()
+                
+                copy.apply_matrix(matrix).shift(square_length / 4 * LEFT, square_length / 4 * UP)
+                copy1.apply_matrix(matrix2).shift(square_length / 4 * RIGHT, square_length / 4 * DOWN)
+
+                result.add(copy, copy1)
+
+            return result
+
+        self.play(Write(contractions))
+        self.play(Write(initial_sets))
+
+        self.next_slide()
+
+        self.play(initial_sets[1].animate.scale(1.3).set_color(YELLOW), FadeIn(square_set[0]), FadeIn(border))
+
+        self.next_slide()
+
+        self.play(text[1].animate.scale(1.3).set_color(YELLOW), ApplyMatrix(matrix=matrix, mobject=square_set[0]))
+        self.play(square_set[0].animate.shift(square_length / 4 * LEFT, square_length / 4 * UP))
+        self.play(text[1].animate.scale(1 / 1.3).set_color(WHITE))
+
+        self.next_slide()
+
+        self.play(FadeIn(square_set[1]), text[2].animate.scale(1.2).set_color(YELLOW))
+
+        self.play(ApplyMatrix(matrix=matrix2, mobject=square_set[1]))
+        self.play(square_set[1].animate.shift(square_length / 4 * RIGHT, square_length / 4 * DOWN))
+        self.play(text[2].animate.scale(1 / 1.2).set_color(WHITE))
+
+        self.next_slide()
+
+        border.add(square_set.copy().set_fill(opacity=0.0).set_stroke(opacity=1.0))
+
+        self.next_slide()
+
+        self.play(ApplyFunction(mobject=square_set, function=barnsley_ifs))
+
+        self.next_slide()
+
+        for _ in range(8):
+            self.play(ApplyFunction(mobject=square_set, function=barnsley_ifs))
+        
+        self.play(FadeOut(border))
+
+        self.next_slide()
+        self.play(initial_sets[1].animate.scale(1 / 1.3).set_color(WHITE), FadeOut(square_set))
+
+        square_set = VGroup(Triangle(radius=square_length / 2, color=WHITE, fill_color=WHITE, fill_opacity=1.0))
+
+        self.play(initial_sets[2].animate.scale(1.3).set_color(YELLOW), FadeIn(square_set))
+
+        self.next_slide()
+
+        for _ in range(10):
+            self.play(ApplyFunction(mobject=square_set, function=barnsley_ifs))
