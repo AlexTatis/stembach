@@ -257,7 +257,7 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        title4 = Tex(r"4. Sistemas de funciones iteradas").to_edge(UP + LEFT)
+        title4 = Tex(r"2. Sistemas de funciones iteradas").to_edge(UP + LEFT)
         self.play(FadeOut(Group(island, island1, island2, text, text1, text2)), Transform(title, title4))
 
         square_length = 4
@@ -351,7 +351,7 @@ class FractalPres(ThreeDSlide):
         ##
 
         self.next_slide()
-        title5 = Tex(r"4. Sistemas de funciones iteradas: Consecuencias").to_edge(UP + LEFT)
+        title5 = Tex(r"2. Sistemas de funciones iteradas: Consecuencias").to_edge(UP + LEFT)
         body = Group(
             Tex(r"\textbf{¡Cualquier forma es posible!}", font_size=36),
             ImageMobject("stem-ifs.png").scale(1.3)
@@ -368,7 +368,7 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        title6 = Tex(r"5. Sistemas dinámicos").to_edge(UP + LEFT)
+        title6 = Tex(r"4. Sistemas dinámicos").to_edge(UP + LEFT)
         subtitle = Tex(r"\textbf{Normas recursivas}", font_size=36).to_edge(UP).shift(DOWN * 1.5)
         text = VGroup(
              Tex(r"Expresiones del tipo", font_size=36),
@@ -464,7 +464,7 @@ class FractalPres(ThreeDSlide):
         self.play(FadeOut(text, curves))
         self.set_camera_orientation(phi=0, theta=-1.5707963267948966)
         
-        title7 = Tex(r"5. Sistemas dinámicos: Consecuencias").to_edge(UP + LEFT)
+        title7 = Tex(r"4. Sistemas dinámicos: Consecuencias").to_edge(UP + LEFT)
         subtitle4 = Tex(r"\textbf{El mapa logístico: población bateriana}", font_size=36).next_to(title, DOWN*2, aligned_edge=LEFT)
         self.play(Transform(title, title7), Transform(subtitle, subtitle4))
 
