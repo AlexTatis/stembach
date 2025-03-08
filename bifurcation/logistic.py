@@ -17,6 +17,8 @@ def plot_population_evolution(ax, r, x0, n_iterations):
     ax.set_ylabel('Población')
 
 if __name__ == "__main__":
+    plt.rcParams.update({'font.size': 14})
+
     r_values = [1, 2, 3, 3.99]
     x0 = 0.5
     n_iterations = 100
