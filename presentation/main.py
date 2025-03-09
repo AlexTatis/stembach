@@ -537,9 +537,8 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        self.next_slide()
 
-        self.play(FadeOut(text), FadeOut(subtitle), FadeOut(on_screen_var), FadeOut(time_graph), FadeOut(axes), FadeOut(labels))
+        self.play(FadeOut(text), FadeOut(subtitle), FadeOut(on_screen_var), Unwrite(time_graph), FadeOut(axes), FadeOut(labels))
 
         body = Group(
             Tex(r"\textbf{¡De un caso natural, emerge una estructura fractal!}", font_size=36),
