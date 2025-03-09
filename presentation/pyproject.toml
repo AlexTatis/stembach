@@ -8,3 +8,10 @@ dependencies = [
     "matplotlib>=3.10.1",
     "numpy>=2.2.3",
 ]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py_modules = ["main", "video"]
