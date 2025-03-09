@@ -90,7 +90,7 @@ jobs:
           xkeyval
 
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: pip install ./presentation
 
     - name: Build HTML
       run: |
