@@ -1,26 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
-S=np.linspace(0.7,4,240000)
 
-X = []
-C = []
+growth_rates = np.linspace(0.7, 4, 240000)
+x_values = []
+bacteria_counts = []
 
-for s in S:
+for growth_rate in growth_rates:
+  x_values.append(growth_rate)
 
-    X.append(s)
+  population = np.random.random()
+  for _ in range(1001):
+    population = (growth_rate * population) * (1 - population)
 
-    m = np.random.random()
-    for n in range(1001):
-      m=(s*m)*(1-m)
+  for _ in range(1051):
+    population = (growth_rate * population) * (1 - population)
 
-    for l in range(1051):
-      m=(s*m)*(1-m)
-
-    C.append(m)
+  bacteria_counts.append(population)
 
 plt.title("Diagrama de bifurcación")
-
-plt.plot(X, C, 'black' ,ls='', marker=',')
+plt.plot(x_values, bacteria_counts, 'black', ls='', marker=',')
 plt.xlabel("Velocidad de crecimiento (C)")
 plt.ylabel("# Bacterias")
 plt.show()

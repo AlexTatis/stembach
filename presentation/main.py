@@ -257,7 +257,7 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        title4 = Tex(r"2. Sistemas de funciones iteradas").to_edge(UP + LEFT)
+        title4 = Tex(r"4. Sistemas de funciones iteradas").to_edge(UP + LEFT)
         self.play(FadeOut(Group(island, island1, island2, text, text1, text2)), Transform(title, title4))
 
         square_length = 4
@@ -351,7 +351,7 @@ class FractalPres(ThreeDSlide):
         ##
 
         self.next_slide()
-        title5 = Tex(r"2. Sistemas de funciones iteradas: Consecuencias").to_edge(UP + LEFT)
+        title5 = Tex(r"4. Sistemas de funciones iteradas: Consecuencias").to_edge(UP + LEFT)
         body = Group(
             Tex(r"\textbf{¡Cualquier forma es posible!}", font_size=36),
             ImageMobject("stem-ifs.png").scale(1.3)
@@ -368,7 +368,7 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        title6 = Tex(r"4. Sistemas dinámicos").to_edge(UP + LEFT)
+        title6 = Tex(r"5. Sistemas dinámicos").to_edge(UP + LEFT)
         subtitle = Tex(r"\textbf{Normas recursivas}", font_size=36).to_edge(UP).shift(DOWN * 1.5)
         text = VGroup(
              Tex(r"Expresiones del tipo", font_size=36),
@@ -434,7 +434,7 @@ class FractalPres(ThreeDSlide):
             dz = x * y - beta * z
             return [dx, dy, dz]   
         
-        axes = ThreeDAxes(x_length=6, y_length=6, z_length=6, tips=False).to_corner(LEFT).shift(UP + 0.5 * RIGHT)
+        axes = ThreeDAxes(x_length=6, y_length=6, z_length=6, tips=False).to_corner(LEFT).shift(UP + 0.7 * RIGHT)
 
         initial_conditions = [[0, 1, 1.05], [0, 1, 1.06]]
         scale_factor = 9
@@ -464,26 +464,26 @@ class FractalPres(ThreeDSlide):
         self.play(FadeOut(text, curves))
         self.set_camera_orientation(phi=0, theta=-1.5707963267948966)
         
-        title7 = Tex(r"4. Sistemas dinámicos: Consecuencias").to_edge(UP + LEFT)
-        subtitle4 = Tex(r"\textbf{El mapa logístico: población bateriana}", font_size=36).next_to(title, DOWN*2, aligned_edge=LEFT)
+        title7 = Tex(r"5. Sistemas dinámicos: Consecuencias").to_edge(UP + LEFT)
+        subtitle4 = Tex(r"\textbf{El mapa logístico poblacional}", font_size=36).next_to(title, DOWN*2, aligned_edge=LEFT)
         self.play(Transform(title, title7), Transform(subtitle, subtitle4))
-
 
         text = Tex(r"\[X_{n+1} = CX_{n}(1 - X_{n})\]", font_size=36).next_to(subtitle4, DOWN*2, aligned_edge=LEFT)
 
         axes = Axes(
-            x_range=[0, 1, 0.2],
+            x_range=[0, 10, 1],
             y_range=[0, 1, 0.1],
             x_length=5,
             y_length=5,
             x_axis_config={"font_size": 20},
             y_axis_config={"font_size": 20},
             tips=False,
-        ).to_corner(RIGHT)
+        ).to_corner(RIGHT, buff=1.5)
 
-        self.play(Write(text), Create(axes))
-
-        self.next_slide()
+        labels = axes.get_axis_labels(
+            Tex("Tiempo").scale(0.6).next_to(axes.x_axis, DOWN), 
+            Text("Población").scale(0.45)
+        )
 
         C = 1.0
         on_screen_var = Variable(C, "C", num_decimal_places=1).next_to(text, DOWN*2, aligned_edge=LEFT)
@@ -492,53 +492,108 @@ class FractalPres(ThreeDSlide):
         def logistic_map(x: float) -> float:
             return c_tracker.get_value() * x - c_tracker.get_value() * np.square(x)
 
-        graph = always_redraw(lambda: axes.plot(lambda x: logistic_map(x), color=RED))
+        self.play(Write(on_screen_var), Write(text), Create(axes), Write(labels))
 
-        self.play(Write(on_screen_var), Create(graph))
+        # Function to update the graph
+        def update_graph(graph):
+            population = [initial_population]
+            for _ in range(time_steps):
+                population.append(logistic_map(population[-1]))
+            new_graph = axes.plot_line_graph(
+            x_values=list(range(time_steps + 1)),
+            y_values=population,
+            line_color=BLUE,
+            )
+            graph.become(new_graph)
+
+        # Plotting the initial evolution of the population over time
+        time_steps = 10
+        initial_population = 0.5
+        population = [initial_population]
+
+        for _ in range(time_steps):
+            population.append(logistic_map(population[-1]))
+
+        time_graph = axes.plot_line_graph(
+            x_values=list(range(time_steps + 1)),
+            y_values=population,
+            line_color=BLUE,
+        )
+
+        self.play(Write(time_graph, run_time=2))
+
+        # Add updater to the graph
+        time_graph.add_updater(update_graph)
 
         self.next_slide()
 
-        self.play(c_tracker.animate.set_value(2))
-        self.play(c_tracker.animate.set_value(4))
-        self.play(c_tracker.animate.set_value(3))
+        # Animate the change of the parameter C
+        self.play(c_tracker.animate.set_value(3.0), run_time=2)
+        self.next_slide()
+
+        # Animate the change of the parameter C
+        self.play(c_tracker.animate.set_value(3.8), run_time=2)
+        self.wait()
 
         self.next_slide()
 
-        graph2 = always_redraw(lambda: axes.plot(lambda x: logistic_map(logistic_map(x)), color=RED))
-
-        self.play(Transform(graph, graph2))
-
         self.next_slide()
 
-        graph3 = always_redraw(lambda: axes.plot(lambda x: logistic_map(logistic_map(logistic_map(x))), color=RED))
-
-        self.play(Transform(graph, graph3))
-
-        self.next_slide()
-
-        text2 = Tex(r"¿Existe algún ciclo estable?", font_size=36).next_to(on_screen_var, DOWN*2, aligned_edge=LEFT)
-
-        self.play(Write(text2))
-
-        self.next_slide()
-
-        self.play(FadeOut(text), FadeOut(text2), FadeOut(subtitle), FadeOut(on_screen_var), FadeOut(axes), FadeOut(graph))
+        self.play(FadeOut(text), FadeOut(subtitle), FadeOut(on_screen_var), FadeOut(time_graph), FadeOut(axes), FadeOut(labels))
 
         body = Group(
             Tex(r"\textbf{¡De un caso natural, emerge una estructura fractal!}", font_size=36),
-            ImageMobject("./bifurcation.png")
-        ).arrange(DOWN)
+            Axes(
+                x_range=[0.7, 4, 0.2],
+                y_range=[0, 1, 0.2],
+                axis_config={"color": BLUE},
+            ).scale(0.75)
+        ).arrange(DOWN, buff=DEFAULT_MOBJECT_TO_MOBJECT_BUFFER * 2.5)
 
-        self.play(FadeIn(body))
+        labels = body[1].get_axis_labels(x_label="r", y_label="x")
+
+        def logistic_map(r, x):
+            return r * x * (1 - x)
+
+        def bifurcation_diagram(r_values, iterations, last):
+            x = np.random.rand(len(r_values))
+            for i in range(iterations):
+                x = logistic_map(r_values, x)
+            if i >= (iterations - last):
+                yield r_values, x
+
+        r_values = np.linspace(0.7, 4.0, 15000)
+        points = VGroup()
+
+        for r, x in bifurcation_diagram(r_values, 1000, 100):
+            for i in range(len(r)):
+                points.add(Dot(body[1].coords_to_point(r[i], x[i]), radius=0.01, color=WHITE))
+
+        self.play(FadeIn(body), Write(labels))
+        
+        self.play(FadeIn(points, lag_ratio=0.01), run_time=2)
 
         self.next_slide()
 
-        self.play(FadeOut(body), FadeOut(title))
+        self.play(FadeOut(body), FadeOut(points), FadeOut(title), FadeOut(labels))
 
         body = Group(Tex(r"¡Gracias por su atención!"),
                      ImageMobject("qr-code.png")).arrange(DOWN)
         
         self.play(FadeIn(body))
+
+        self.play(FadeOut(body))
+
+        colab = VGroup(
+             Text('Supervisión'),
+             Text("María Ermitas Pintos Testa", font_size=36),
+             Text("Coordinadora del centro", font_size=30),
+             KochCurve(7, stroke_width=1, length=4),
+             Text("Jerónimo Rodríguez García", font_size=36),
+             Text("Tutor de la USC", font_size=30) 
+            ).arrange(DOWN, buff=0.5)
+        
+        self.play(Write(colab), run_time=3)
 
 
 

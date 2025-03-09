@@ -119,10 +119,10 @@ class CreditsVideo(ThreeDScene):
         colab = VGroup(
              Text('Supervisión'),
              Text("María Ermitas Pintos Testa", font_size=36),
-             Text("Tutora del centro", font_size=30),
+             Text("Coordinadora del centro", font_size=30),
              KochCurve(7, stroke_width=1, length=4),
              Text("Jerónimo Rodríguez García", font_size=36),
-             Text("Coordinador de la USC", font_size=30) 
+             Text("Tutor de la USC", font_size=30) 
             ).arrange(DOWN, buff=0.5)
         self.play(Write(colab), run_time=3)
 
@@ -136,3 +136,36 @@ class CreditsVideo(ThreeDScene):
 
         self.play(FadeIn(text))
         self.wait()
+
+class Testing(ThreeDSlide):
+     def construct(self):
+        axes = Axes(
+            x_range=[0.7, 4, 0.2],
+            y_range=[0, 1, 0.2],
+            axis_config={"color": BLUE},
+        )
+
+        labels = axes.get_axis_labels(x_label="r", y_label="x")
+
+        self.play(Create(axes), Write(labels))
+
+        def logistic_map(r, x):
+            return r * x * (1 - x)
+
+        def bifurcation_diagram(r_values, iterations, last):
+            x = np.random.rand(len(r_values))
+            for i in range(iterations):
+                x = logistic_map(r_values, x)
+            if i >= (iterations - last):
+                yield r_values, x
+
+        r_values = np.linspace(0.7, 4.0, 15000)
+        points = VGroup()
+
+        for r, x in bifurcation_diagram(r_values, 1000, 100):
+            for i in range(len(r)):
+                points.add(Dot(axes.coords_to_point(r[i], x[i]), radius=0.01, color=WHITE))
+
+        self.play(FadeIn(points, lag_ratio=0.01), run_time=2)
+        self.wait()
+
