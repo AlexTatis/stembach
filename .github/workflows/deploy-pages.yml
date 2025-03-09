@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  FILE: 'presentation/main.py'  # Source file where scenes are defined
+  FILE: 'main.py'  # Source file where scenes are defined
   MANIM: 'manim'  # manim or manimgl - which Manim renderer to use
   SCENES: 'FractalPres'  # Space-separated list of scenes to render
   USES_TEX: true  # true or false - disabling this will make the action run faster
@@ -94,6 +94,7 @@ jobs:
 
     - name: Build HTML
       run: |
+        cd presentation
         ${{ env.MANIM }} ${{ env.FILE }} ${{ env.SCENES }}
         manim-slides convert ${{ env.SCENES }} _site/index.html
 
