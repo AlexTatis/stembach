@@ -53,15 +53,40 @@ class FractalPres(ThreeDSlide):
         self.play(FadeOut(Group(*self.mobjects)))
 
         # self.camera.frame.save_state()
+        title2 = Tex(r"2. Objetivos").to_edge(UP + LEFT)
+
+        text = Tex(r"""
+        \begin{enumerate}
+            \item Explorar matemáticamente 3 técnicas de formación fractal:
+            \subitem - Sistemas de Lindenmayer
+            \subitem - Sistemas de funciones iteradas
+            \subitem - Sistemas dinámicos
+            
+            \item Analizar las consecuencias reales de las propiedades estudiadas:
+            \subitem - Biología
+            \subitem - Ingeniería
+            \subitem - Metereología
+            \subitem - Medicina
+            \subitem - ...
+            
+        \end{enumerate}
+        """, font_size=28, tex_environment="flushleft").next_to(title2, DOWN*2, aligned_edge=LEFT)
+
+        self.play(Write(title2))
+        self.play(Write(text))
+
+        self.next_slide()
+
+        self.play(FadeOut(Group(title2, text)))
 
         title = Tex(r"1. ¿Qué es un fractal?").to_edge(UP + LEFT)
         text1 = Tex(r"En la \textbf{naturaleza} observamos estructuras que podríamos denominar \textit{fractales}.", font_size=28, ).next_to(title, DOWN*2, aligned_edge=LEFT)
         text2 = Tex(r"""Constarían de algunas propiedades que los caracterizan, destacando su \textit{autosimilaridad}.""", font_size=28, tex_environment="flushleft").next_to(text1, DOWN, aligned_edge=LEFT)
 
         image = Group(
-                ImageMobject("copo-nieve.png").scale(0.5),
-                ImageMobject("rayo.png").scale(0.5),
-                ImageMobject("helecho.png").scale(0.5),
+            ImageMobject("copo-nieve.png").scale(0.5),
+            ImageMobject("rayo.png").scale(0.5),
+            ImageMobject("helecho.png").scale(0.5),
             ).arrange(RIGHT).to_corner(DOWN)
 
         self.play(Write(title), Write(text1))
@@ -69,7 +94,6 @@ class FractalPres(ThreeDSlide):
         self.next_slide()
 
         self.play(Write(text2))
-        
         
         self.next_slide()
 
@@ -84,28 +108,7 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        title2 = Tex(r"2. Objetivos").to_edge(UP + LEFT)
-
-        text = Tex(r"""
-        \begin{enumerate}
-            \item Explorar matemáticamente 3 técnicas de formación fractal:
-                \subitem - Sistemas de Lindenmayer
-                \subitem - Sistemas de funciones iteradas
-                \subitem - Sistemas dinámicos
-                
-            \item Analizar las consecuencias reales de las propiedades estudiadas:
-                \subitem - Biología
-                \subitem - Ingeniería
-                \subitem - Metereología
-                \subitem - Medicina
-                \subitem - ...
-                
-        \end{enumerate}
-        """, font_size=28, tex_environment="flushleft").next_to(title, DOWN*2, aligned_edge=LEFT)
-
-        # self.play(Restore(self.camera.frame))
-        self.play(FadeOut(Group(text1, text2, image)), Transform(title, title2))
-        self.play(Write(text))
+        self.play(FadeOut(Group(title, text1, text2, image)))
 
         ###
         ### Slide 3
@@ -142,15 +145,18 @@ class FractalPres(ThreeDSlide):
         self.play(Transform(kc, kc2))
         """ self.play(Transform(b1, b2), Transform(b1text, b2text)) """
 
-        self.next_slide()
         self.play(Transform(kc, kc3))
 
-        self.next_slide()
         self.play(Transform(kc, kc4))
         self.play(Transform(kc, kc5))
         self.play(Transform(kc, kc6))
         self.play(Transform(kc, kc7))
         self.play(Transform(kc, kc8))
+
+        self.next_slide()
+
+        expression = Tex(r"S = \left( \Sigma, P, \omega \right)").next_to(kc, UP)
+        self.play(Write(expression))
 
         # PENDIENTE: Conseguir poner los Braces en su sitio
 
@@ -159,6 +165,8 @@ class FractalPres(ThreeDSlide):
         ###
 
         self.next_slide()
+
+        self.play(Unwrite(expression))
 
         subtitle = Tex(r"\textbf{Instrucciones}", font_size=36)
         text1 = Tex(r"F $\rightarrow$ Mover 1 paso", font_size=36).next_to(subtitle, DOWN, aligned_edge=LEFT)
@@ -207,7 +215,7 @@ class FractalPres(ThreeDSlide):
              lambda m: m.move_to(kc10.point_from_proportion(tracker.get_value()))
         )
 
-        STOPS = [.25, .5, .75, 1.0]
+        STOPS = [1.0]
 
         self.play(Transform(kc, kc10), Transform(iteration, iteration1))
         
@@ -231,9 +239,14 @@ class FractalPres(ThreeDSlide):
 
         title3 = Tex(r"3. Sistemas Lindenmayer: Consecuencias").to_edge(UP + LEFT)
 
-        island   = KochCurve(7, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5)
-        island1  = KochCurve(7, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(240*DEGREES, about_point=island.get_start()).shift(RIGHT * 5)
-        island2  = KochCurve(7, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(-240*DEGREES, about_point=island.get_end()).shift(LEFT * 5)
+        island   = KochCurve(0, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5)
+        island1  = KochCurve(0, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(240*DEGREES, about_point=island.get_start()).shift(RIGHT * 5)
+        island2  = KochCurve(0, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(-240*DEGREES, about_point=island.get_end()).shift(LEFT * 5)
+
+        island3   = KochCurve(1, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5)
+        island4  = KochCurve(1, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(240*DEGREES, about_point=island.get_start()).shift(RIGHT * 5)
+        island5  = KochCurve(1, stroke_width=1, length=5).next_to(title, DOWN*2 + RIGHT * 5).rotate(-240*DEGREES, about_point=island.get_end()).shift(LEFT * 5)
+        
 
         text = Tex(r"\[A = \lim_{n\rightarrow\infty} \frac{\sqrt{3}}{20} \left(8-3\left(\frac{4}{9}\right)^n\right) = \frac{8\sqrt{3}}{20} = \boxed{\frac{2\sqrt{3}}{5}}\]", font_size=28).next_to(title, DOWN*2, aligned_edge=LEFT)
         text1 = Tex(r"\[P = \lim_{n\rightarrow\infty} 3 \cdot\left( \frac{4}{3} \right)^n = \boxed{\infty}\]", font_size=28).next_to(text, DOWN, aligned_edge=LEFT)
@@ -241,6 +254,35 @@ class FractalPres(ThreeDSlide):
 
         self.play(FadeOut(Group(kc, instructions, rules, iteration, dot)), Transform(title, title3))
         self.play(Write(island), Write(island1), Write(island2))
+
+        self.next_slide()
+
+        self.play(Transform(island, island3), Transform(island1, island4), Transform(island2, island5))
+
+        
+        island3  = KochCurve(2, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT)
+        island4  = KochCurve(2, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(240*DEGREES, about_point=island3.get_start()).shift(RIGHT * 5)
+        island5  = KochCurve(2, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(-240*DEGREES, about_point=island3.get_end()).shift(LEFT * 5)
+
+        self.play(Transform(island, island3), Transform(island1, island4), Transform(island2, island5))
+
+        island3  = KochCurve(3, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT)
+        island4  = KochCurve(3, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(240*DEGREES, about_point=island3.get_start()).shift(RIGHT * 5)
+        island5  = KochCurve(3, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(-240*DEGREES, about_point=island3.get_end()).shift(LEFT * 5)
+
+        self.play(Transform(island, island3), Transform(island1, island4), Transform(island2, island5))
+
+        island3  = KochCurve(4, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT)
+        island4  = KochCurve(4, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(240*DEGREES, about_point=island3.get_start()).shift(RIGHT * 5)
+        island5  = KochCurve(4, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(-240*DEGREES, about_point=island3.get_end()).shift(LEFT * 5)
+
+        self.play(Transform(island, island3), Transform(island1, island4), Transform(island2, island5))
+
+        island3  = KochCurve(7, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT)
+        island4  = KochCurve(7, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(240*DEGREES, about_point=island3.get_start()).shift(RIGHT * 5)
+        island5  = KochCurve(7, stroke_width=1, length=5).to_edge(RIGHT).shift(UP * 2, LEFT).rotate(-240*DEGREES, about_point=island3.get_end()).shift(LEFT * 5)
+
+        self.play(Transform(island, island3), Transform(island1, island4), Transform(island2, island5))
 
         self.next_slide()
 
@@ -252,13 +294,28 @@ class FractalPres(ThreeDSlide):
         self.play(Write(text2))
 
         ##
+        ## Slide 9: Bronquio
+        ##
+
+        self.next_slide()
+
+        image = ImageMobject("bronquio.png").scale(1.5).to_edge(DOWN)
+
+        self.play(FadeOut(Group(island, island1, island2, text, text1, text2)))
+        self.play(FadeIn(image))
+
+        self.next_slide()
+
+        self.play(FadeOut(image))
+
+        ##
         ## Slide 6: IFS
         ##
 
         self.next_slide()
 
-        title4 = Tex(r"4. Sistemas de funciones iteradas").to_edge(UP + LEFT)
-        self.play(FadeOut(Group(island, island1, island2, text, text1, text2)), Transform(title, title4))
+        title4 = Tex(r"2. Sistemas de funciones iteradas").to_edge(UP + LEFT)
+        self.play(Transform(title, title4))
 
         square_length = 4
         border = VGroup(Square(stroke_color=WHITE, stroke_width = 1, side_length=square_length))
@@ -549,7 +606,7 @@ class FractalPres(ThreeDSlide):
             ).scale(0.75)
         ).arrange(DOWN, buff=DEFAULT_MOBJECT_TO_MOBJECT_BUFFER * 2.5)
 
-        labels = body[1].get_axis_labels(x_label="r", y_label="x")
+        labels = body[1].get_axis_labels(x_label="C", y_label="x")
 
         def logistic_map(r, x):
             return r * x * (1 - x)
@@ -561,7 +618,7 @@ class FractalPres(ThreeDSlide):
             if i >= (iterations - last):
                 yield r_values, x
 
-        r_values = np.linspace(0.7, 4.0, 15000)
+        r_values = np.linspace(0.7, 4.0, 30000)
         points = VGroup()
 
         for r, x in bifurcation_diagram(r_values, 1000, 100):
@@ -572,14 +629,27 @@ class FractalPres(ThreeDSlide):
         
         self.play(FadeIn(points, lag_ratio=0.01), run_time=2)
 
+
+        # Slide with GIF
         self.next_slide()
 
         self.play(FadeOut(body), FadeOut(points), FadeOut(title), FadeOut(labels))
+
+        gif = ImageMobject("./mandelbrot.gif").scale(1.5).to_edge(DOWN)
+
+        self.play(FadeIn(gif))
+
+        self.next_slide()
+
+        self.play(FadeOut(gif))
+
 
         body = Group(Tex(r"¡Gracias por su atención!"),
                      ImageMobject("qr-code.png")).arrange(DOWN)
         
         self.play(FadeIn(body))
+
+        self.next_slide()
 
         self.play(FadeOut(body))
 
