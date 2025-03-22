@@ -1,3 +1,3 @@
 #!/bin/bash
 
-manim main.py FractalPres && manim-slides FractalPres --hide-info-window
+uv run manim main.py FractalPres && uv run manim-slides FractalPres --hide-info-window

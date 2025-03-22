@@ -155,7 +155,7 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        expression = Tex(r"S = \left( \Sigma, P, \omega \right)").next_to(kc, UP)
+        expression = Tex(r"\[S = \left( \Sigma, P, \omega \right)\]").next_to(kc, UP)
         self.play(Write(expression))
 
         # PENDIENTE: Conseguir poner los Braces en su sitio
