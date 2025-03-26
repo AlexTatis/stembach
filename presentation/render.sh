@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run manim main.py FractalPres && uv run manim-slides FractalPres --hide-info-window
+uv run manim main.py FractalPres --disable_caching && uv run manim-slides FractalPres --hide-info-window

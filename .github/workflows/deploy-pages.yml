@@ -28,6 +28,7 @@ jobs:
   deploy:
     permissions: write-all
     runs-on: ubuntu-latest
+    timeout-minutes: 300  # Set timeout to 5 hours, adjust as needed
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -95,7 +96,7 @@ jobs:
     - name: Build HTML
       run: |
         cd presentation
-        ${{ env.MANIM }} ${{ env.FILE }} ${{ env.SCENES }}
+        ${{ env.MANIM }} ${{ env.FILE }} ${{ env.SCENES }} --disable_caching
         manim-slides convert ${{ env.SCENES }} _site/index.html
 
     - name: Push to gh-pages branch

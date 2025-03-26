@@ -1,6 +1,0 @@
-manim==0.18.1
-manim-slides==5.3.0
-matplotlib>=3.10.1
-numpy>=2.2.3
-pyqt6>=6.8.1
-pyside6>=6.8.2.1
