@@ -292,14 +292,17 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        image = ImageMobject("bronquio.png").scale(0.5).to_edge(DOWN * 2)
+        image1 = ImageMobject("bronquio.png").scale(0.5).to_edge(DOWN * 2, LEFT * 2)
+        image2 = ImageMobject("brain-fractal.jpg").scale(0.2).to_edge(DOWN * 2)
+        image3 = ImageMobject("antena-pcb-removebg-preview.png").scale(0.5).to_edge(DOWN * 2, RIGHT * 2)
+
 
         self.play(FadeOut(Group(island, island1, island2, text, text1, text2)))
-        self.play(FadeIn(image))
+        self.play(FadeIn(image1, image2, image3))
 
         self.next_slide()
 
-        self.play(FadeOut(image))
+        self.play(FadeOut(image1, image2, image3))
 
         ##
         ## Slide 6: IFS
@@ -470,8 +473,6 @@ class FractalPres(ThreeDSlide):
         ).arrange(DOWN).next_to(subtitle2, DOWN*2)
 
         self.play(Transform(subtitle, subtitle3))
-        self.play(Write(text))
-        self.add_fixed_in_frame_mobjects(title, subtitle, text)
         self.set_camera_orientation(phi=2*PI/5, theta=PI/5)
 
         def lorenz_equations(t, state):
@@ -501,6 +502,8 @@ class FractalPres(ThreeDSlide):
         self.play(Create(curves[0]))
     
         self.play(Create(curves[1:], run_time=15, rate_func=linear))
+        self.play(Write(text))
+        self.add_fixed_in_frame_mobjects(title, subtitle, text)
 
         self.wait(20)
         self.next_slide()
@@ -609,7 +612,7 @@ class FractalPres(ThreeDSlide):
             if i >= (iterations - last):
                 yield r_values, x
 
-        r_values = np.linspace(0.7, 4.0, 100000)
+        r_values = np.linspace(0.7, 4.0, 50000)
         points = VGroup()
 
         for r, x in bifurcation_diagram(r_values, 1000, 100):
@@ -677,7 +680,7 @@ class FractalPres(ThreeDSlide):
         # 3.1) Parámetros para el Mandelbrot
         RES = 500       # resolución
         MAX_ITER = 50   # iteraciones máximas
-        XMIN, XMAX = 1/4, -2
+        XMIN, XMAX = -2, 1
         YMIN, YMAX = -1.5, 1.5
 
         # Para dibujar "abajo", crearemos un VGroup y luego lo moveremos
