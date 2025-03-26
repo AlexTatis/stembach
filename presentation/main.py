@@ -91,12 +91,8 @@ class FractalPres(ThreeDSlide):
 
         self.play(Write(title), Write(text1))
 
-        self.next_slide()
-
         self.play(Write(text2))
         
-        self.next_slide()
-
         self.play(FadeIn(image))
 
         # self.next_slide()
@@ -179,7 +175,7 @@ class FractalPres(ThreeDSlide):
         instructions.next_to(title, DOWN*2, aligned_edge=LEFT)
 
         subtitle2 = Tex(r"\textbf{Normas de sustitución}", font_size=36)
-        text4 = Tex(r"F $\rightarrow$ F+F--F+F", font_size=36).next_to(subtitle2, DOWN, aligned_edge=LEFT)
+        text4 = Tex(r"F $\rightarrow$ F+F- -F+F", font_size=36).next_to(subtitle2, DOWN, aligned_edge=LEFT)
 
         rules = VGroup(subtitle2, text4)
         rules_box = SurroundingRectangle(rules, color=RED, buff=MED_LARGE_BUFF, corner_radius=0.2)
@@ -204,8 +200,6 @@ class FractalPres(ThreeDSlide):
         self.next_slide()
         self.play(MoveAlongPath(dot, kc9, run_time=2))
 
-        self.next_slide()
-
         self.play(dot.animate.next_to(kc9, LEFT, buff=0))
 
         self.next_slide()
@@ -223,7 +217,6 @@ class FractalPres(ThreeDSlide):
             # move to next position
             self.play(tracker.animate.set_value(stop),run_time=1.0)
             # pause, do something, pause
-            self.next_slide()
 
         dot.clear_updaters()
 
@@ -311,8 +304,6 @@ class FractalPres(ThreeDSlide):
         ##
         ## Slide 6: IFS
         ##
-
-        self.next_slide()
 
         title4 = Tex(r"2. Sistemas de funciones iteradas").to_edge(UP + LEFT)
         self.play(Transform(title, title4))
@@ -686,7 +677,7 @@ class FractalPres(ThreeDSlide):
         # 3.1) Parámetros para el Mandelbrot
         RES = 500       # resolución
         MAX_ITER = 50   # iteraciones máximas
-        XMIN, XMAX = -2, 1/4
+        XMIN, XMAX = 1/4, -2
         YMIN, YMAX = -1.5, 1.5
 
         # Para dibujar "abajo", crearemos un VGroup y luego lo moveremos
