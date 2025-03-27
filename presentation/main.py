@@ -502,8 +502,7 @@ class FractalPres(ThreeDSlide):
         
         self.play(Create(curves[0]))
     
-        self.play(Create(curves[1:], run_time=15, rate_func=linear))
-        self.play(Write(text))
+        self.play(Write(text), Create(curves[1:], run_time=15, rate_func=linear))
 
         self.wait(20)
         self.next_slide()
@@ -794,12 +793,12 @@ class FractalPres(ThreeDSlide):
         self.wait(0.5)
 
         # Líneas de conexión
-        self.play(Create(lines_group))
-        self.wait(2)
+        # self.play(Create(lines_group))
+        # self.wait(2)
         
         self.next_slide()
 
-        self.play(FadeOut(title), FadeOut(bif_axes_group), FadeOut(bif_points), FadeOut(mandelbrot_group), FadeOut(lines_group))
+        self.play(FadeOut(title), FadeOut(mandelbrot_group))
 
 
         body = Group(Tex(r"¡Gracias por su atención!"),

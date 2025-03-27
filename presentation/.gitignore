@@ -4,3 +4,4 @@ dist_assets/
 __pycache__/
 .python-version
 uv.lock
+presentation.egg-info/
