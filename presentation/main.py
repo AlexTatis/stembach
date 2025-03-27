@@ -678,7 +678,7 @@ class FractalPres(ThreeDSlide):
         # 3) Conjunto de Mandelbrot (abajo e invertido)
         # ------------------------------------------------
         # 3.1) Parámetros para el Mandelbrot
-        RES = 500       # resolución
+        RES = 300       # resolución
         MAX_ITER = 50   # iteraciones máximas
         XMIN, XMAX = -2, 1
         YMIN, YMAX = -1.5, 1.5
@@ -689,8 +689,8 @@ class FractalPres(ThreeDSlide):
         # 3.2) Generamos el fractal píxel a píxel
         # Definimos un ancho y alto en coordenadas Manim
         # (para luego ubicarlo centrado bajo el diagrama).
-        fractal_width = 5
-        fractal_height = 3
+        fractal_width = 10
+        fractal_height = 5
 
         # Función para mapear (x, y) real a coordenadas de Manim
         # centradas, con el mismo ancho que "fractal_width" y alto "fractal_height".
@@ -741,7 +741,7 @@ class FractalPres(ThreeDSlide):
         mandelbrot_group.flip(UP)
 
         # Ahora lo desplazamos debajo del diagrama de bifurcación
-        mandelbrot_group.next_to(bif_axes_group, DOWN, buff=1.0)
+        #mandelbrot_group.next_to(bif_axes_group, DOWN, buff=1.0)
 
         # ------------------------------------------------
         # 4) Añadir líneas que conecten r (arriba) con c (abajo)
@@ -785,9 +785,9 @@ class FractalPres(ThreeDSlide):
         self.wait(0.5)
 
         # Diagrama de bifurcación
-        self.play(FadeIn(bif_axes_group))
-        self.play(FadeIn(bif_points, lag_ratio=0.01), run_time=2)
-        self.wait(0.5)
+        # self.play(FadeIn(bif_axes_group))
+        # self.play(FadeIn(bif_points, lag_ratio=0.01), run_time=2)
+        # self.wait(0.5)
 
         # Mandelbrot (invertido)
         self.play(FadeIn(mandelbrot_group, lag_ratio=0.01), run_time=2)
