@@ -473,6 +473,8 @@ class FractalPres(ThreeDSlide):
         ).arrange(DOWN).next_to(subtitle2, DOWN*2)
 
         self.play(Transform(subtitle, subtitle3))
+        self.play(Write(text))
+        self.add_fixed_in_frame_mobjects(title, subtitle, text)
         self.set_camera_orientation(phi=2*PI/5, theta=PI/5)
 
         def lorenz_equations(t, state):
@@ -489,7 +491,6 @@ class FractalPres(ThreeDSlide):
         scale_factor = 9
         curves = VGroup(axes)
 
-        self.add_fixed_in_frame_mobjects(title, subtitle, text)
 
         for condition in initial_conditions:
             solution = solve_ivp(lorenz_equations, [0, 30], condition, t_eval=np.linspace(0, 30, 3000))
@@ -502,7 +503,7 @@ class FractalPres(ThreeDSlide):
         
         self.play(Create(curves[0]))
     
-        self.play(Write(text), Create(curves[1:], run_time=15, rate_func=linear))
+        self.play(Create(curves[1:], run_time=15, rate_func=linear))
 
         self.wait(20)
         self.next_slide()
@@ -611,7 +612,7 @@ class FractalPres(ThreeDSlide):
             if i >= (iterations - last):
                 yield r_values, x
 
-        r_values = np.linspace(0.7, 4.0, 50000)
+        r_values = np.linspace(0.7, 4.0, 40000)
         points = VGroup()
 
         for r, x in bifurcation_diagram(r_values, 1000, 100):
@@ -664,15 +665,16 @@ class FractalPres(ThreeDSlide):
         # 2.4) Creamos los puntos del diagrama
         r_values = np.linspace(0, 4.0, 1000)
         bif_points = VGroup()
-        for r, x in bifurcation_diagram(r_values, iterations=1000, last=100):
+        """     for r, x in bifurcation_diagram(r_values, iterations=1000, last=100):
             for i in range(len(r)):
                 dot = Dot(
                     axes_top.coords_to_point(r[i], x[i]),
                     radius=0.008,
                     color=WHITE
                 )
-                bif_points.add(dot)
-
+                 #bif_points.add(dot)
+            
+        """
         # ------------------------------------------------
         # 3) Conjunto de Mandelbrot (abajo e invertido)
         # ------------------------------------------------
@@ -689,7 +691,7 @@ class FractalPres(ThreeDSlide):
         # Definimos un ancho y alto en coordenadas Manim
         # (para luego ubicarlo centrado bajo el diagrama).
         fractal_width = 10
-        fractal_height = 5
+        fractal_height = 10
 
         # Función para mapear (x, y) real a coordenadas de Manim
         # centradas, con el mismo ancho que "fractal_width" y alto "fractal_height".
