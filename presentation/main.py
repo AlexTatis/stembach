@@ -292,9 +292,9 @@ class FractalPres(ThreeDSlide):
 
         self.next_slide()
 
-        image1 = ImageMobject("bronquio.png").scale(0.5).to_edge(DOWN * 2, LEFT * 2)
-        image2 = ImageMobject("brain-fractal.jpg").scale(0.2).to_edge(DOWN * 2)
-        image3 = ImageMobject("antena-pcb-removebg-preview.png").scale(0.5).to_edge(DOWN * 2, RIGHT * 2)
+        image1 = ImageMobject("bronquio.png").scale(0.5).to_edge(LEFT)
+        image2 = ImageMobject("brain-fractal.jpg").scale(0.2)
+        image3 = ImageMobject("antena-pcb-removebg-preview.png").scale(0.5).to_edge(RIGHT)
 
 
         self.play(FadeOut(Group(island, island1, island2, text, text1, text2)))
@@ -489,6 +489,7 @@ class FractalPres(ThreeDSlide):
         scale_factor = 9
         curves = VGroup(axes)
 
+        self.add_fixed_in_frame_mobjects(title, subtitle, text)
 
         for condition in initial_conditions:
             solution = solve_ivp(lorenz_equations, [0, 30], condition, t_eval=np.linspace(0, 30, 3000))
@@ -503,7 +504,6 @@ class FractalPres(ThreeDSlide):
     
         self.play(Create(curves[1:], run_time=15, rate_func=linear))
         self.play(Write(text))
-        self.add_fixed_in_frame_mobjects(title, subtitle, text)
 
         self.wait(20)
         self.next_slide()
