@@ -789,6 +789,8 @@ class FractalPres(ThreeDSlide):
         # self.play(FadeIn(bif_points, lag_ratio=0.01), run_time=2)
         # self.wait(0.5)
 
+        mandelbrot_group.next_to(title, DOWN)
+
         # Mandelbrot (invertido)
         self.play(FadeIn(mandelbrot_group, lag_ratio=0.01), run_time=2)
         self.wait(0.5)
