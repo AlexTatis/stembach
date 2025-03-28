@@ -690,8 +690,8 @@ class FractalPres(ThreeDSlide):
         # 3.2) Generamos el fractal píxel a píxel
         # Definimos un ancho y alto en coordenadas Manim
         # (para luego ubicarlo centrado bajo el diagrama).
-        fractal_width = 10
-        fractal_height = 10
+        fractal_width = 7
+        fractal_height = 7
 
         # Función para mapear (x, y) real a coordenadas de Manim
         # centradas, con el mismo ancho que "fractal_width" y alto "fractal_height".
