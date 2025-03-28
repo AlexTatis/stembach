@@ -110,7 +110,6 @@ class FractalPres(ThreeDSlide):
         ### Slide 3
         ###
 
-        self.next_slide()
 
         title3 = Tex(r"3. Sistemas Lindenmayer").to_edge(UP + LEFT)
 
